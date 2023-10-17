@@ -1,0 +1,15 @@
+import os
+import re
+from string import punctuation
+from textblob import Word
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from wordcloud import WordCloud
+import nltk
+from nltk import word_tokenize
+from nltk.corpus import stopwords
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.feature_extraction.text import CountVectorizer
