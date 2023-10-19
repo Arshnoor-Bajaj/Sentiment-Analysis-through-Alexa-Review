@@ -1,15 +1,90 @@
-import os
-import re
-from string import punctuation
-from textblob import Word
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from wordcloud import WordCloud
+# Step 1: Collect Alexa Reviews
+reviews = [
+    "This Alexa device is amazing!",
+    "I'm not satisfied with the Alexa's performance.",
+    "The Alexa app needs improvement.",
+    "Alexa is a great addition to my smart home setup.",
+    "I have mixed feelings about Alexa."
+]
+
+# Step 2: Preprocessing
 import nltk
-from nltk import word_tokenize
 from nltk.corpus import stopwords
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.feature_extraction.text import CountVectorizer
+from nltk.stem import WordNetLemmatizer
+
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('english'))
+
+preprocessed_reviews = []
+
+for review in reviews:
+    # Tokenization
+    words = nltk.word_tokenize(review.lower())
+    
+    # Remove stop words and perform lemmatization
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    
+    preprocessed_reviews.append(words)
+
+# Step 3: Feature Extraction
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+vectorizer = TfidfVectorizer()
+feature_vectors = vectorizer.fit_transform([' '.join(review) for review in preprocessed_reviews])
+
+# Step 4: Training Data Preparation
+labels = ['positive', 'negative', 'neutral', 'positive', 'neutral']
+
+# Step 5: Model Training
+from sklearn.svm import SVC
+
+model = SVC()
+model.fit(feature_vectors[:3], labels[:3])
+
+# Step 6: Model Evaluation
+predicted_labels = model.predict(feature_vectors[3:])
+actual_labels = labels[3:]
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+accuracy = accuracy_score(actual_labels, predicted_labels)
+precision = precision_score(actual_labels, predicted_labels, average='weighted')
+recall = recall_score(actual_labels, predicted_labels, average='weighted')
+f1 = f1_score(actual_labels, predicted_labels, average='weighted')
+
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1-score:", f1)
+
+# Step 7: Sentiment Analysis
+unlabeled_reviews = [
+    "I love using Alexa for my daily tasks.",
+    "The voice recognition of Alexa needs improvement.",
+    "Alexa's skills are impressive.",
+    "I find Alexa's responses to be inconsistent."
+]
+
+preprocessed_unlabeled_reviews = []
+
+for review in unlabeled_reviews:
+    words = nltk.word_tokenize(review.lower())
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    preprocessed_unlabeled_reviews.append(words)
+
+unlabeled_feature_vectors = vectorizer.transform([' '.join(review) for review in preprocessed_unlabeled_reviews])
+predicted_sentiments = model.predict(unlabeled_feature_vectors)
+
+for review, sentiment in zip(unlabeled_reviews, predicted_sentiments):
+    print("Review:", review)
+    print("Sentiment:", sentiment)
+    print()
+
+# Step 8: Post-processing
+# Analyze the sentiment distribution and identify patterns or trends
+
+# Step 9: End
+# Generate insights or take further actions based on the sentiment analysis results
