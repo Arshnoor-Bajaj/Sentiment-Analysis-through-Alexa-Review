@@ -3,21 +3,37 @@ Major project under the Internship program (Data Science  with Python with IBM) 
 
 # Methdology
    +-------------------+
+   
    |   Start           |
+   
    +-------------------+
+   
            |
+           
            v
+           
    +-------------------+
+   
    |   Collect Alexa   |
+   
    |      Reviews      |
+   
    +-------------------+
+   
            |
+           
            v
+           
    +-------------------+
+   
    |   Preprocessing   |
+   
    +-------------------+
+   
            |
+           
            v
+           
    +-------------------+
    |  Feature Extraction |
    +-------------------+
